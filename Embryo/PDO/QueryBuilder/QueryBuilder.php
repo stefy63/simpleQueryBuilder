@@ -1,20 +1,20 @@
-<?php 
+<?php
 
     /**
      * QueryBuilder
-     * 
-     * This query builder provides a convenient, fluent 
+     *
+     * This query builder provides a convenient, fluent
      * interface to creating and running database queries.
-     * 
+     *
      * @author Davide Cesarano <davide.cesarano@unipegaso.it>
      * @link https://github.com/davidecesarano/embryo-pdo
      */
 
     namespace Embryo\PDO\QueryBuilder;
-    
+
     use Embryo\PDO\QueryBuilder\Query;
     use Embryo\PDO\QueryBuilder\Traits\{AliasesTrait, ComposeQueryTrait};
-    
+
     class QueryBuilder
     {
         use AliasesTrait;
@@ -24,7 +24,7 @@
          * @var \PDO $pdo
          */
         private $pdo;
-        
+
         /**
          * @var string $table
          */
@@ -34,7 +34,7 @@
          * @var array $insert
          */
         private $insert = [];
-        
+
         /**
          * @var array $update
          */
@@ -43,13 +43,13 @@
         /**
          * @var string $select
          */
-        private $select = '';
+        private $select = '*';
 
         /**
          * @var bool $delete
          */
         private $delete = false;
-        
+
         /**
          * @var array $join
          */
@@ -84,18 +84,18 @@
          * @var array $whereOperators
          */
         private $whereOperators = [
-            '=', 
-            '>', 
-            '>=', 
-            '<', 
-            '<=', 
-            '!=', 
-            '<>', 
+            '=',
+            '>',
+            '>=',
+            '<',
+            '<=',
+            '!=',
+            '<>',
             'LIKE',
-            'NOT LIKE', 
-            'IS NULL', 
-            'IS NOT NULL', 
-            'IN', 
+            'NOT LIKE',
+            'IS NULL',
+            'IS NOT NULL',
+            'IN',
             'NOT IN',
             'BETWEEN',
             'NOT BETWEEN',
@@ -183,12 +183,12 @@
 
         /**
          * SELECT statement shortened.
-         * 
+         *
          * @return object|array|bool
          */
         public function get()
         {
-            $this->select = '*';
+            // $this->select = '*';
             $query = $this->execute();
             return $query->get();
         }
@@ -196,21 +196,21 @@
         /**
          * SELECT statement shortened
          * for to force array.
-         * 
+         *
          * @return array
          */
         public function all()
         {
-            $this->select = '*';
+            // $this->select = '*';
             $query = $this->execute();
             return $query->all();
         }
 
         /**
          * Debug query shortened.
-         * 
+         *
          * Works only for SELECT statement.
-         * 
+         *
          * @return string
          */
         public function debug(): string
@@ -228,7 +228,7 @@
 
         /**
          * Return rows count.
-         * 
+         *
          * @return int
          */
         public function count(): int
@@ -240,11 +240,11 @@
 
         /**
          * Return max value.
-         * 
-         * @param string $field 
+         *
+         * @param string $field
          * @return mixed
          */
-        public function max(string $field) 
+        public function max(string $field)
         {
             $max = 'MAX('.$field.')';
             $this->select = $max;
@@ -254,11 +254,11 @@
 
         /**
          * Return min value.
-         * 
-         * @param string $field 
+         *
+         * @param string $field
          * @return mixed
          */
-        public function min(string $field) 
+        public function min(string $field)
         {
             $min = 'MIN('.$field.')';
             $this->select = $min;
@@ -268,11 +268,11 @@
 
         /**
          * Return average value.
-         * 
-         * @param string $field 
+         *
+         * @param string $field
          * @return mixed
          */
-        public function avg(string $field) 
+        public function avg(string $field)
         {
             $avg = 'AVG('.$field.')';
             $this->select = $avg;
@@ -282,11 +282,11 @@
 
         /**
          * Return sum value's column.
-         * 
-         * @param string $field 
+         *
+         * @param string $field
          * @return mixed
          */
-        public function sum(string $field) 
+        public function sum(string $field)
         {
             $sum = 'SUM('.$field.')';
             $this->select = $sum;
@@ -321,7 +321,7 @@
          * @param string $join
          * @return self
          */
-        public function rightJoin(string $join): self 
+        public function rightJoin(string $join): self
         {
             $this->join[] = [
                 'type' => 'RIGHT',
@@ -336,7 +336,7 @@
          * @param string $join
          * @return self
          */
-        public function crossJoin(string $join): self 
+        public function crossJoin(string $join): self
         {
             $this->join[] = [
                 'type' => 'CROSS',
@@ -351,7 +351,7 @@
          * @param string $join
          * @return self
          */
-        public function innerJoin(string $join): self 
+        public function innerJoin(string $join): self
         {
             $this->join[] = [
                 'type' => 'INNER',
@@ -366,7 +366,7 @@
          * @param string $join
          * @return self
          */
-        public function rawJoin(string $join): self 
+        public function rawJoin(string $join): self
         {
             $this->join[] = [
                 'type' => '',
@@ -390,7 +390,7 @@
          * @return self
          */
         public function where($field, $operatorValue = null, $value = null): self
-        {   
+        {
             return $this->addWhere('AND', $field, $operatorValue, $value);
         }
 
@@ -413,7 +413,7 @@
          * @param string $field
          * @return self
          */
-        public function whereNull(string $field): self 
+        public function whereNull(string $field): self
         {
             return $this->addWhere('AND', $field, 'IS NULL');
         }
@@ -424,7 +424,7 @@
          * @param string $field
          * @return self
          */
-        public function orWhereNull(string $field): self 
+        public function orWhereNull(string $field): self
         {
             return $this->addWhere('OR', $field, 'IS NULL');
         }
@@ -435,7 +435,7 @@
          * @param string $field
          * @return self
          */
-        public function whereNotNull(string $field): self 
+        public function whereNotNull(string $field): self
         {
             return $this->addWhere('AND', $field, 'IS NOT NULL');
         }
@@ -446,68 +446,68 @@
          * @param string $field
          * @return self
          */
-        public function orWhereNotNull(string $field): self 
+        public function orWhereNotNull(string $field): self
         {
             return $this->addWhere('OR', $field, 'IS NOT NULL');
         }
 
         /**
          * "WHERE IN" and "AND IN" condition.
-         * 
-         * @param string $field 
-         * @param array $values 
+         *
+         * @param string $field
+         * @param array $values
          * @return self
          */
-        public function whereIn(string $field, array $values): self 
+        public function whereIn(string $field, array $values): self
         {
             return $this->addWhere('AND', $field, 'IN', $values);
         }
 
         /**
          * "OR IN" condition.
-         * 
-         * @param string $field 
-         * @param array $values 
+         *
+         * @param string $field
+         * @param array $values
          * @return self
          */
-        public function orWhereIn(string $field, array $values): self 
+        public function orWhereIn(string $field, array $values): self
         {
             return $this->addWhere('OR', $field, 'IN', $values);
         }
 
         /**
          * "WHERE NOT IN" and "AND NOT IN" condition.
-         * 
-         * @param string $field 
-         * @param array $values 
+         *
+         * @param string $field
+         * @param array $values
          * @return self
          */
-        public function whereNotIn(string $field, array $values): self 
+        public function whereNotIn(string $field, array $values): self
         {
             return $this->addWhere('AND', $field, 'NOT IN', $values);
         }
 
         /**
          * "OR NOT IN" condition.
-         * 
-         * @param string $field 
-         * @param array $values 
+         *
+         * @param string $field
+         * @param array $values
          * @return self
          */
-        public function orWhereNotIn(string $field, array $values): self 
+        public function orWhereNotIn(string $field, array $values): self
         {
             return $this->addWhere('OR', $field, 'NOT IN', $values);
         }
-        
+
         /**
          * "WHERE BETWEEN" and "AND BETWEEN" condition.
-         * 
-         * @param string $field 
-         * @param array $values 
+         *
+         * @param string $field
+         * @param array $values
          * @return self
          * @throws \InvalidArgumentException
          */
-        public function whereBetween(string $field, array $values): self 
+        public function whereBetween(string $field, array $values): self
         {
             if (count($values) !== 2) {
                 throw new \InvalidArgumentException('Between condition must have two values');
@@ -517,13 +517,13 @@
 
         /**
          * "OR BETWEEN" condition.
-         * 
-         * @param string $field 
-         * @param array $values 
+         *
+         * @param string $field
+         * @param array $values
          * @return self
          * @throws \InvalidArgumentException
          */
-        public function orWhereBetween(string $field, array $values): self 
+        public function orWhereBetween(string $field, array $values): self
         {
             if (count($values) !== 2) {
                 throw new \InvalidArgumentException('Between condition must have two values');
@@ -533,13 +533,13 @@
 
         /**
          * "WHERE NOT BETWEEN" and "AND NOT BETWEEN" condition.
-         * 
-         * @param string $field 
-         * @param array $values 
+         *
+         * @param string $field
+         * @param array $values
          * @return self
          * @throws \InvalidArgumentException
          */
-        public function whereNotBetween(string $field, array $values): self 
+        public function whereNotBetween(string $field, array $values): self
         {
             if (count($values) !== 2) {
                 throw new \InvalidArgumentException('Between condition must have two values');
@@ -549,13 +549,13 @@
 
         /**
          * "OR NOT BETWEEN" condition.
-         * 
-         * @param string $field 
-         * @param array $values 
+         *
+         * @param string $field
+         * @param array $values
          * @return self
          * @throws \InvalidArgumentException
          */
-        public function orWhereNotBetween(string $field, array $values): self 
+        public function orWhereNotBetween(string $field, array $values): self
         {
             if (count($values) !== 2) {
                 throw new \InvalidArgumentException('Between condition must have two values');
@@ -565,7 +565,7 @@
 
         /**
          * Raw where condition.
-         * 
+         *
          * @param string $where
          * @param array $values
          * @return self
@@ -577,11 +577,11 @@
 
         /**
          * Add WHERE condition.
-         * 
-         * @param string $clause 
-         * @param string|callable $field 
-         * @param mixed $operatorValue 
-         * @param mixed $value 
+         *
+         * @param string $clause
+         * @param string|callable $field
+         * @param mixed $operatorValue
+         * @param mixed $value
          * @return self
          * @throws \InvalidArgumentException
          */
@@ -593,13 +593,13 @@
 
             if (is_callable($field)) {
 
-                $this->startParentheses = true;  
+                $this->startParentheses = true;
                 call_user_func($field, $this);
                 $last = (count($this->where))-1;
                 $this->where[$last]['endParentheses'] = true;
 
             } else {
- 
+
                 $operator = ($operatorValue !== 0 && in_array($operatorValue, $this->whereOperators)) ? $operatorValue : '=';
                 $this->where[] = [
                     'clause'           => $clause,
@@ -627,7 +627,7 @@
          * @param string $groupBy
          * @return self
          */
-        public function groupBy(string $groupBy): self 
+        public function groupBy(string $groupBy): self
         {
             $this->groupBy = trim($groupBy);
             return $this;
@@ -659,7 +659,7 @@
 
         /**
          * Offset query.
-         * 
+         *
          * @param int $offset
          * @return self
          */
@@ -684,7 +684,7 @@
         {
             $query = $this->composeStatement()['query'];
             $query .= $this->composeJoins();
-            $query .= $this->composeWhereConditions()['query'];          
+            $query .= $this->composeWhereConditions()['query'];
             $query .= $this->composeGroupBy();
             $query .= $this->composeOrderBy();
             $query .= $this->composeLimit();
