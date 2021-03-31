@@ -1,5 +1,5 @@
 # simpleQueryBuilder is a simple Query Builder for PHP
-Is a fork of https://github.com/davidecesarano/Embryo-PDO [davidecesarano/embryo-pdo] (embryo)
+Is a fork of [davidecesarano/embryo-pdo]  (https://github.com/davidecesarano/Embryo-PDO)
 
 
 ## simpleQueryBuilder
@@ -26,30 +26,6 @@ Using Composer:
 ```
 $ composer require stefy63/simpleQueryBuilder
 ```
-
-## Usage
-* [Connection](#connection)
-* [Retrieving results](#retrieving-results)
-    * [Retrieving a single row](#retrieving-a-single-row)
-    * [Forcing array](#forcing-array)
-    * [Aggregates](#aggregates)
-* [Where conditions](#where-conditions)
-    * [Simple Where](#simple-where)
-    * [OR condition](#or-condition)
-    * [AND/OR closure](#andor-closure)
-    * [BETWEEN condition](#between-condition)
-    * [IN condition](#in-condition)
-    * [IS NULL condition](#is-null-condition)
-    * [Raw Where](#raw-where)
-    * [Method Aliases](#method-aliases)
-* [Joins](#joins)
-* [Insert](#insert)
-* [Update](#update)
-* [Delete](#delete)
-* [Ordering, grouping, limit and offset](#ordering-grouping-limit-and-offset)
-* [Raw Query](#raw-query)
-* [Security](#security)
-* [Debugging](#debugging)
 
 ### Connection
 
