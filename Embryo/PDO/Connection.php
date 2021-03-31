@@ -13,6 +13,7 @@
 
     use Embryo\PDO\QueryBuilder\QueryBuilder;
     use Embryo\PDO\QueryBuilder\Query;
+    use PDOException;
 
     class Connection 
     {
@@ -58,7 +59,7 @@
          * 
          * @param \Closure $callback
          * @return mixed
-         * @throws \PDOException
+         * @throws PDOException
          */
         public function transaction(\Closure $callback)
         {
@@ -70,11 +71,57 @@
                 $this->pdo->commit();
                 return $result;
 
-            } catch (\PDOException $e) {
-                
+            } catch (PDOException $e) {
                 $this->pdo->rollback();
-                throw new \PDOException($e->getMessage());
+                throw new PDOException($e->getMessage());
                 
             }
+        }
+
+        /**
+         * Begin Transaction
+         *
+         * @return mixed
+         */
+        public function beginTransaction() {
+            try {
+                $this->pdo->beginTransaction();
+                return true;
+            } catch (PDOException $e) {
+                throw new PDOException($e->getMessage());
+
+            }
+        }
+
+        /**
+         * Commit
+         *
+         * @return mixed
+         */
+        public function commit() {
+            try {
+                $this->pdo->commit();
+                return true;
+            } catch (PDOException $e) {
+                throw new PDOException($e->getMessage());
+
+            }
+
+        }
+
+        /**
+         * Rollback
+         *
+         * @return mixed
+         */
+        public function rollback() {
+            try {
+                $this->pdo->rollback();
+                return true;
+            } catch (PDOException $e) {
+                throw new PDOException($e->getMessage());
+
+            }
+
         }
     }
