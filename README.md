@@ -48,4 +48,4 @@ $database = [
 $database = new Embryo\PDO\Database($database);
 $pdo = $database->connection('local');
 ```
-
+ For more information refer to https://github.com/davidecesarano/Embryo-PDO
