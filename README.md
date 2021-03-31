@@ -1,4 +1,8 @@
-# Embryo PDO
+#simple Query Builder for PHP
+Is a fork of https://github.com/davidecesarano/Embryo-PDO [davidecesarano/embryo-pdo] (embryo)
+
+
+# simpleQueryBuilder
 A quick and light PHP query builder using PDO.
 ```php
 $users = $pdo->table('users')
@@ -20,7 +24,7 @@ $users = $pdo->table('users')
 ## Installation
 Using Composer:
 ```
-$ composer require davidecesarano/embryo-pdo
+$ composer require stefy63/simpleQueryBuilder
 ```
 
 ## Usage
