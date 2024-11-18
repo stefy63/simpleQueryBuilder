@@ -11,7 +11,8 @@
      */
 
     namespace Embryo\PDO\QueryBuilder;
-
+    
+    use Embryo\Http\Factory\ServerRequestFactory;
     use Embryo\PDO\QueryBuilder\Query;
     use Embryo\PDO\QueryBuilder\Traits\{AliasesTrait, ComposeQueryTrait};
 
@@ -125,6 +126,18 @@
         }
 
         /**
+         * "SELECT" fields.
+         *
+         * @param string[] $field
+         * @return self
+         */
+        public function select(...$field): self
+        {
+            $this->select = (!empty($field)) ? join(', ', $field) : '*';
+            return $this;
+        }
+
+        /**
          * ------------------------------------------------------------
          * STATEMENTS
          * ------------------------------------------------------------
@@ -169,26 +182,13 @@
         }
 
         /**
-         * "SELECT" query.
-         *
-         * @param string[] $field
-         * @return Query
-         */
-        public function select(...$field): Query
-        {
-            $this->select = (!empty($field)) ? join(', ', $field) : '*';
-            $query = $this->execute();
-            return $query;
-        }
-
-        /**
          * SELECT statement shortened.
          *
          * @return object|array|bool
          */
         public function get()
         {
-            // $this->select = '*';
+            $this->select = empty($this->select) ? '*' : $this->select;
             $query = $this->execute();
             return $query->get();
         }
@@ -201,9 +201,49 @@
          */
         public function all()
         {
-            // $this->select = '*';
+            $this->select = empty($this->select) ? '*' : $this->select;
             $query = $this->execute();
             return $query->all();
+        }
+
+        /**
+         * Pagination.
+         * 
+         * @param int $perPage
+         * @param string $select 
+         * @return object
+         */
+        public function paginate(int $perPage = 50): object
+        {
+            $this->select = empty($this->select) ? '*' : $this->select;
+            
+            $request = (new ServerRequestFactory)->createServerRequestFromServer();
+            $params  = $request->getQueryParams();
+            $page    = isset($params['page']) && $params['page'] != 0 && is_numeric($params['page']) ? (int) $params['page'] : 1;
+            $query   = $this->execute();
+            $total   = $query->count();
+            $offset  = ($page-1) * $perPage;
+            $pages   = ceil($total / $perPage);
+            $next    = ($page == $pages) ? NULL : $page+1;
+            $prev    = ($page == 1) ? NULL : $page-1;
+            $from    = $offset+1;
+            $to      = $offset+$perPage < $total ? $offset+$perPage : $total;
+
+            $this->limit = $offset.', '.$perPage;
+            $query = $this->execute();
+            $data = $query->all();
+
+            return (object) [
+                'total'        => $total,
+                'per_page'     => $perPage,
+                'current_page' => $page,
+                'last_page'    => $pages,
+                'next_page'    => $next,
+                'prev_page'    => $prev,
+                'from'         => $from,
+                'to'           => $to,
+                'data'         => $data
+            ];
         }
 
         /**
@@ -215,9 +255,21 @@
          */
         public function debug(): string
         {
-            $this->select = '*';
+            $this->select = empty($this->select) ? '*' : $this->select;
             $query = $this->execute();
             return $query->debug();
+        }
+
+        /**
+         * Print query.
+         * 
+         * @return string
+         */
+        public function print(): string
+        {
+            $this->select = empty($this->select) ? '*' : $this->select;
+            $query = $this->execute();
+            return $query->print();
         }
 
         /**
@@ -591,7 +643,7 @@
                 throw new \InvalidArgumentException("First parameter must be a string or callable");
             }
 
-            if (is_callable($field)) {
+            if (is_callable($field) && !is_string($field)) {
 
                 $this->startParentheses = true;
                 call_user_func($field, $this);
